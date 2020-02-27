@@ -175,14 +175,13 @@ public class {{classname}} {
                   localVarResponse.body())
               );
           } else {
-              return CompletableFuture.completedFuture(
-                  {{#returnValue}}
+              try {
+                  return CompletableFuture.completedFuture(
                       memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<{{{returnType}}}>() {})
-                  {{/returnValue}}
-                  {{^returnValue}}
-                      null
-                  {{/returnValue}}
-              );
+                  );
+              } catch (IOException e) {
+                      return CompletableFuture.failedFuture(new ApiException(e));
+              }
           }
       });
       {{/asyncNative}}
